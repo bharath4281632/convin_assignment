@@ -1,11 +1,14 @@
 import axios from "axios";
+let config = {
+  headers: { "Content-Type": "application/json" }
+};
 function getHttp(url) {
-  let config = {
-    headers: { "Access-Control-Allow-Origin": "*" }
-  };
   return axios.get(url);
 }
-
+function postHttp(url, data) {
+  return axios.post(url, data, config);
+}
 export default {
-  getHttp
+  getHttp,
+  postHttp
 };

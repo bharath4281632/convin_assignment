@@ -1,12 +1,13 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import SubDomineForm from "./components/subDomineForm";
+import SubDomainForm from "./components/subDomineForm";
+import Login from "./components/login";
 
 function App() {
   return (
     <div>
-      <SubDomineForm></SubDomineForm>
+      {/* <SubDomainForm></SubDomainForm> */}
+      <Login></Login>
     </div>
   );
 }
