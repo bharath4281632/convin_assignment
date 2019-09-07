@@ -1,14 +1,18 @@
 import axios from "axios";
-let config = {
-  headers: { "Content-Type": "application/json" }
-};
-function getHttp(url) {
-  return axios.get(url);
+import config from "../config";
+
+const { defaultConfig } = config.restApi;
+
+const customDomain = name => `https://${name}.api.convin.ai`;
+
+function getHttp(url, subDomain = "app") {
+  return axios.get(`${customDomain(subDomain)}${url}`);
 }
-function postHttp(url, data) {
-  return axios.post(url, data, config);
+function postHttp(url, data, subDomain = "app") {
+  return axios.post(`${customDomain(subDomain)}${url}`, data, defaultConfig);
 }
 export default {
   getHttp,
-  postHttp
+  postHttp,
+  customDomain
 };

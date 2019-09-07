@@ -1,22 +1,24 @@
 import React, { Component } from "react";
 import httpClients from "../services/httpClients";
+import config from "../config";
+//material design Ui components
 import Paper from "@material-ui/core/Paper";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
 import { withStyles } from "@material-ui/core/styles";
-import {
-  FormLabel,
-  FormGroup,
-  TextField,
-  Button,
-  FormHelperText
-} from "@material-ui/core";
+
+//Material-ui custom design
 const style = theme => ({
   root: {
     position: "absolute",
     width: 620,
     top: "50%",
     left: "50%",
-    transform: "translate(-50%,-50%)",
-    justifyContent: "center"
+    transform: "translate(-50%,-50%)"
   },
   paper: {
     padding: 25
@@ -37,44 +39,63 @@ const style = theme => ({
     color: "black"
   }
 });
+
 class SubDomainForm extends Component {
   state = {
-    subDomain: ""
+    subDomain: "",
+    error: ""
   };
-
+  validation(data) {
+    if (data.trim() === "") {
+      this.setState({ error: "The Sub-Domain should not be empty" });
+      return false;
+    }
+    return true;
+  }
   handleChange = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
+    const { value } = e.currentTarget;
+    this.setState({ subDomain: value });
   };
   handleSubmit = async e => {
-    e.preventDefault();
-    // console.log(this.state.subDomain);
     try {
-      const response = await httpClients.postHttp("/domains/", {
-        name: this.state.subDomain
-      });
-      console.log("The response try");
-      console.log(response);
-    } catch (ex) {
-      console.log("error is executied");
-      if (ex.data && ex.status(504)) {
-        console.error("The request not reponding");
+      e.preventDefault();
+      const { subDomain } = this.state;
+      this.setState({ error: "" });
+      if (!this.validation(subDomain)) return;
+      const { data: availRes } = await httpClients.getHttp(
+        `/domains/availability?name=${subDomain}`
+      );
+      if (availRes.available) {
+        let domain = httpClients.customDomain(subDomain);
+        const { data: domainRes } = await httpClients.postHttp("/domains/", {
+          name: subDomain
+        });
+        if (domainRes.status) {
+          this.props.setLocalUserInfo(false, domain);
+          return;
+        }
       }
+      if (availRes.status === "error") {
+        this.setState({ error: availRes.message });
+        return;
+      }
+    } catch (err) {
+      console.log(err.message);
     }
   };
   render() {
     const { classes } = this.props;
-    const { subDomain } = this.state;
+    const { subDomain, error } = this.state;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <form onSubmit={this.handleSubmit}>
-            <FormLabel classes={{ root: classes.formLabel }}>
+            <FormLabel className={classes.formLabel}>
               Create A Custom Sub-Domine
             </FormLabel>
             <FormGroup className={classes.textField}>
               <TextField
-                id="standard-name"
+                error={error ? true : false}
                 label="Enter Your Sub-Domine"
                 value={subDomain}
                 onChange={this.handleChange}
@@ -82,8 +103,8 @@ class SubDomainForm extends Component {
                 fullWidth
                 name="subDomain"
               />
-              <FormHelperText>
-                You can access the subDomain as a Independent Url
+              <FormHelperText error={error ? true : false}>
+                {error}
               </FormHelperText>
             </FormGroup>
             <Button
