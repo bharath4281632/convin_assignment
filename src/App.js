@@ -33,7 +33,7 @@ function App() {
   }, []);
   return (
     <div>
-      <StartUp></StartUp>
+      <StartUp hidden={userInfo.isNew}></StartUp>
       <div hidden={!userInfo.isNew}>
         <SubDomainForm setLocalUserInfo={setLocalUserInfo}></SubDomainForm>
       </div>

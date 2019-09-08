@@ -20,17 +20,16 @@ const styles = theme => ({
 });
 class StartUp extends Component {
   state = {
-    tabValue: 0
+    tabValue: 1
   };
   handleTabChange = (valu, newValue) => {
-    console.log(valu);
-    console.log(newValue);
+    this.setState({ tabValue: newValue });
   };
   render() {
-    const { classes } = this.props;
+    const { classes, ...rest } = this.props;
     const { tabValue } = this.state;
     return (
-      <div className={classes.root}>
+      <div className={classes.root} {...rest}>
         <Paper>
           <Tabs
             value={tabValue}

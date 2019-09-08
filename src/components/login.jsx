@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import { FormControl, FormLabel, FormGroup } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import { FormControl, FormGroup } from "@material-ui/core";
+import Joi from "@hapi/joi";
+import config from "../config";
 //Material-ui custom design
 const style = theme => ({
   root: {},
@@ -23,41 +24,64 @@ export class Login extends Component {
     const { value, name } = e.currentTarget;
     let userLogin = { ...this.state.userLogin };
     userLogin[name] = value;
-    console.log(userLogin);
     this.setState({ userLogin });
+  };
+  validation = () => {
+    const schema = Joi.object().keys({
+      ...config.loginForm.validationConditions
+    });
+    const result = Joi.validate(this.state.userLogin, schema, {
+      abortEarly: false
+    });
+    console.log(result);
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    console.log(this.state.userLogin);
+    this.validation();
   };
   render() {
     const { classes } = this.props;
     const { userLogin } = this.state;
+    const { fields } = config.loginForm;
     return (
       <div className={classes.root}>
-        <Paper>
-          <form>
-            <FormControl>
-              <FormLabel>Register Here</FormLabel>
-              <FormGroup>
+        <div className={classes.paper}>
+          <form onSubmit={this.handleSubmit}>
+            <FormControl fullWidth>
+              {fields.map(field => (
+                <FormGroup key={field.name} style={{ width: "100%" }}>
+                  <TextField
+                    label={field.label}
+                    value={userLogin[field.name]}
+                    onChange={this.handleChange}
+                    type={field.type}
+                    margin="normal"
+                    fullWidth
+                    name={field.name}
+                    required={field.required}
+                  ></TextField>
+                </FormGroup>
+              ))}
+
+              {/* <FormGroup>
                 <TextField
-                  label="Enter Your Sub-Domine"
-                  value={userLogin.username}
-                  onChange={this.handleChange}
-                  margin="normal"
-                  fullWidth
-                  name="username"
-                ></TextField>
-              </FormGroup>
-              <FormGroup>
-                <TextField
-                  label="Enter Your Sub-Domine"
+                  label="Password"
                   value={userLogin.password}
                   onChange={this.handleChange}
                   margin="normal"
                   fullWidth
                   name="password"
+                  type="password"
                 ></TextField>
-              </FormGroup>
+              </FormGroup> */}
+
+              <Button variant="contained" color="primary" type="submit">
+                Log In
+              </Button>
             </FormControl>
           </form>
-        </Paper>
+        </div>
       </div>
     );
   }

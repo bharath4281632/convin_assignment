@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { FormControl, FormLabel, FormGroup } from "@material-ui/core";
+import { FormControl, FormGroup } from "@material-ui/core";
+
+import config from "../config";
 //Material-ui custom design
 const style = theme => ({
   root: {},
@@ -25,7 +26,7 @@ export class Register extends Component {
       primary_phone: "+91 ",
       team: 0,
       groups: [],
-      user_permissions: []
+      user_permissions: ["admin"]
     }
   };
   handleChange = e => {
@@ -35,19 +36,10 @@ export class Register extends Component {
     // console.log(userRegister);
     this.setState({ userRegister });
   };
-  registerForm = [
-    { label: "User Name", name: "username", type: "text" },
-    { label: "password", name: "password", type: "password" },
-    { label: "first Name", name: "first_name", type: "text" },
-    { label: "Middle Name", name: "middle_name", type: "text" },
-    { label: "Last Name", name: "last_name", type: "text" },
-    { label: "Email Address", name: "email", type: "email" },
-    { label: "Phone Number", name: "primary_phone", type: "text" }
-  ];
   handleSubmit = e => {
     e.preventDefault();
     const { userRegister } = this.state;
-    let today = new Date().toUTCString();
+    const today = new Date().toUTCString();
     userRegister.date_joined = today;
     userRegister.last_login = today;
     console.log(today);
@@ -57,12 +49,13 @@ export class Register extends Component {
   render() {
     const { classes } = this.props;
     const { userRegister } = this.state;
+    const { fields } = config.registrationForm;
     return (
       <div className={classes.root}>
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
           <form onSubmit={this.handleSubmit}>
             <FormControl fullWidth>
-              {this.registerForm.map(field => (
+              {fields.map(field => (
                 <FormGroup key={field.name} style={{ width: "100%" }}>
                   <TextField
                     label={field.label}
@@ -72,6 +65,7 @@ export class Register extends Component {
                     margin="normal"
                     fullWidth
                     name={field.name}
+                    required={field.required}
                   ></TextField>
                 </FormGroup>
               ))}
@@ -82,7 +76,7 @@ export class Register extends Component {
               </FormGroup>
             </FormControl>
           </form>
-        </Paper>
+        </div>
       </div>
     );
   }
