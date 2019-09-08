@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import { FormControl, FormGroup } from "@material-ui/core";
 import Joi from "@hapi/joi";
 import config from "../config";
+import httpClients from "../services/httpClients";
+import localStorageClients from "../services/localStorageClients";
 //Material-ui custom design
 const style = theme => ({
   root: {},
@@ -35,10 +37,20 @@ export class Login extends Component {
     });
     console.log(result);
   };
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
     console.log(this.state.userLogin);
     this.validation();
+    try {
+      const response = await httpClients.postHttp(
+        "/persons/get_token/",
+        this.state.userLogin,
+        localStorageClients.getDomainName()
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err.message);
+    }
   };
   render() {
     const { classes } = this.props;
@@ -63,18 +75,6 @@ export class Login extends Component {
                   ></TextField>
                 </FormGroup>
               ))}
-
-              {/* <FormGroup>
-                <TextField
-                  label="Password"
-                  value={userLogin.password}
-                  onChange={this.handleChange}
-                  margin="normal"
-                  fullWidth
-                  name="password"
-                  type="password"
-                ></TextField>
-              </FormGroup> */}
 
               <Button variant="contained" color="primary" type="submit">
                 Log In

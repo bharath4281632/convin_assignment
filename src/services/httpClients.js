@@ -1,18 +1,25 @@
 import axios from "axios";
 import config from "../config";
+import localStorageClients from "./localStorageClients";
 
 const { defaultConfig } = config.restApi;
-
-const customDomain = name => `https://${name}.api.convin.ai`;
+const createBaseUrl = name => `https://${name}.api.convin.ai`;
+const baseUrl = () => {
+  return localStorageClients.getDomainName();
+};
 
 function getHttp(url, subDomain = "app") {
-  return axios.get(`${customDomain(subDomain)}${url}`);
+  return axios.get(`${baseUrl()}${url}`);
 }
 function postHttp(url, data, subDomain = "app") {
-  return axios.post(`${customDomain(subDomain)}${url}`, data, defaultConfig);
+  return axios.post(`${baseUrl()}${url}`, data, {
+    ...defaultConfig,
+    "Access-Control-Request-Method": "POST"
+  });
 }
 export default {
   getHttp,
   postHttp,
-  customDomain
+  baseUrl,
+  createBaseUrl
 };

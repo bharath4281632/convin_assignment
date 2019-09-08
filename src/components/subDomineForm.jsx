@@ -57,21 +57,21 @@ class SubDomainForm extends Component {
     this.setState({ subDomain: value });
   };
   handleSubmit = async e => {
+    e.preventDefault();
+    const { subDomain } = this.state;
+    const baseUrl = httpClients.createBaseUrl(subDomain);
+    this.setState({ error: "" });
+    if (!this.validation(subDomain)) return;
     try {
-      e.preventDefault();
-      const { subDomain } = this.state;
-      this.setState({ error: "" });
-      if (!this.validation(subDomain)) return;
       const { data: availRes } = await httpClients.getHttp(
         `/domains/availability?name=${subDomain}`
       );
       if (availRes.available) {
-        let domain = httpClients.customDomain(subDomain);
         const { data: domainRes } = await httpClients.postHttp("/domains/", {
           name: subDomain
         });
         if (domainRes.status) {
-          this.props.setLocalUserInfo(false, domain);
+          this.props.setLocalUserInfo(false, baseUrl);
           return;
         }
       }
@@ -80,7 +80,9 @@ class SubDomainForm extends Component {
         return;
       }
     } catch (err) {
-      console.log(err.message);
+      if (err.response.data.message)
+        return this.props.setLocalUserInfo(false, baseUrl);
+      console.log(err.response.data.message);
     }
   };
   render() {

@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { FormControl, FormGroup } from "@material-ui/core";
+import { FormControl, FormGroup, FormHelperText } from "@material-ui/core";
 
 import config from "../config";
+import httpClients from "../services/httpClients";
+import localStorageClients from "../services/localStorageClients";
 //Material-ui custom design
 const style = theme => ({
   root: {},
@@ -23,10 +25,12 @@ export class Register extends Component {
       middle_name: "",
       last_name: "",
       email: "",
-      primary_phone: "+91 ",
-      team: 0,
-      groups: [],
-      user_permissions: ["admin"]
+      primary_phone: "+91",
+
+      user_permissions: [3]
+    },
+    error: {
+      username: "User Name is already filled"
     }
   };
   handleChange = e => {
@@ -36,22 +40,49 @@ export class Register extends Component {
     // console.log(userRegister);
     this.setState({ userRegister });
   };
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
+
     const { userRegister } = this.state;
-    const today = new Date().toUTCString();
+    const today = new Date().toISOString();
     userRegister.date_joined = today;
     userRegister.last_login = today;
-    console.log(today);
     console.log(userRegister);
-    console.log(typeof today);
+    try {
+      const response = await httpClients.postHttp(
+        "/persons/create_admin/",
+        userRegister
+      );
+      console.log(response);
+      this.setState({ error: {} });
+      if (response.statusText === "Created")
+        return this.setState({
+          userRegister: {
+            password: "",
+            last_login: "",
+            username: "",
+            date_joined: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            email: "",
+            primary_phone: "+91",
+
+            user_permissions: [3]
+          }
+        });
+    } catch (err) {
+      this.setState({ error: err.response.data });
+      console.log(err.response.data);
+    }
   };
   render() {
     const { classes } = this.props;
-    const { userRegister } = this.state;
+    const { userRegister, error } = this.state;
     const { fields } = config.registrationForm;
     return (
       <div className={classes.root}>
+        Base Url: {httpClients.baseUrl()}
         <div className={classes.paper}>
           <form onSubmit={this.handleSubmit}>
             <FormControl fullWidth>
@@ -66,7 +97,11 @@ export class Register extends Component {
                     fullWidth
                     name={field.name}
                     required={field.required}
+                    error={error[field.name] ? true : false}
                   ></TextField>
+                  <FormHelperText error={error[field.name] ? true : false}>
+                    {error[field.name]}
+                  </FormHelperText>
                 </FormGroup>
               ))}
               <FormGroup>

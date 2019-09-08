@@ -20,7 +20,7 @@ const styles = theme => ({
 });
 class StartUp extends Component {
   state = {
-    tabValue: 1
+    tabValue: 0
   };
   handleTabChange = (valu, newValue) => {
     this.setState({ tabValue: newValue });
