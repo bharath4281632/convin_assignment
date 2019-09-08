@@ -34,8 +34,8 @@ const config = {
   },
   loginForm: {
     fields: [
-      { label: "User Name", name: "username", type: "text", required: false },
-      { label: "Password", name: "password", type: "password", required: false }
+      { label: "User Name", name: "username", type: "text", required: true },
+      { label: "Password", name: "password", type: "password", required: true }
     ],
     validationConditions: {
       username: Joi.string()

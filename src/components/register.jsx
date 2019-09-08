@@ -72,8 +72,11 @@ export class Register extends Component {
           }
         });
     } catch (err) {
-      this.setState({ error: err.response.data });
-      console.log(err.response.data);
+      if (err.response) {
+        this.setState({ error: err.response.data });
+        console.log(err.response.data);
+        return;
+      }
     }
   };
   render() {

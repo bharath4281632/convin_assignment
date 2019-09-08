@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { FormControl, FormGroup } from "@material-ui/core";
-import Joi from "@hapi/joi";
+
 import config from "../config";
 import httpClients from "../services/httpClients";
 import localStorageClients from "../services/localStorageClients";
@@ -28,26 +28,21 @@ export class Login extends Component {
     userLogin[name] = value;
     this.setState({ userLogin });
   };
-  validation = () => {
-    const schema = Joi.object().keys({
-      ...config.loginForm.validationConditions
-    });
-    const result = Joi.validate(this.state.userLogin, schema, {
-      abortEarly: false
-    });
-    console.log(result);
-  };
+
   handleSubmit = async e => {
     e.preventDefault();
     console.log(this.state.userLogin);
-    this.validation();
+
     try {
       const response = await httpClients.postHttp(
         "/persons/get_token/",
         this.state.userLogin,
         localStorageClients.getDomainName()
       );
-      console.log(response);
+      if (response.statusText === "OK") {
+        localStorage.setItem("token", response.data.token);
+        window.location.href = "/home";
+      }
     } catch (err) {
       console.log(err.message);
     }

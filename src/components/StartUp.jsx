@@ -6,6 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import { withStyles } from "@material-ui/core/styles";
 import Login from "./login";
 import Register from "./register";
+import { currentUser } from "../services/authUser";
 
 //material-ui custom Style
 
@@ -22,6 +23,9 @@ class StartUp extends Component {
   state = {
     tabValue: 0
   };
+  componentDidMount() {
+    console.log(currentUser());
+  }
   handleTabChange = (valu, newValue) => {
     this.setState({ tabValue: newValue });
   };
