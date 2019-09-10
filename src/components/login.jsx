@@ -10,12 +10,12 @@ import config from "../config/config";
 
 export class Login extends Component {
   state = {
-    userLogin: {
-      username: "",
-      password: ""
-    },
+    userLogin: config.loginForm.defaultValue,
     error: {}
   };
+  // componentDidMount(){
+  // this.set
+  // }
   handleChange = e => {
     const { value, name } = e.currentTarget;
     let userLogin = { ...this.state.userLogin };

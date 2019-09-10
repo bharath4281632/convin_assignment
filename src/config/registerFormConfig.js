@@ -1,4 +1,15 @@
 const registrationForm = {
+  defaultValue: {
+    password: "",
+    last_login: "",
+    username: "",
+    date_joined: "",
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    email: "",
+    primary_phone: "+91"
+  },
   fields: [
     { label: "User Name", name: "username", type: "text", required: true },
     { label: "Password", name: "password", type: "password", required: true },

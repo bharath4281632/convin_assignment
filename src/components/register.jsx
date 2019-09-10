@@ -7,18 +7,7 @@ import config from "../config/config";
 
 export class Register extends Component {
   state = {
-    userRegister: {
-      password: "",
-      last_login: "",
-      username: "",
-      date_joined: "",
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      email: "",
-      primary_phone: "+91",
-      user_permissions: [3]
-    },
+    userRegister: config.registrationForm.defaultValue,
     error: {}
   };
   handleChange = e => {
@@ -41,18 +30,7 @@ export class Register extends Component {
       this.setState({ error: {} });
       if (response.statusText === "Created")
         return this.setState({
-          userRegister: {
-            password: "",
-            last_login: "",
-            username: "",
-            date_joined: "",
-            first_name: "",
-            middle_name: "",
-            last_name: "",
-            email: "",
-            primary_phone: "+91",
-            user_permissions: [3]
-          }
+          userRegister: config.registrationForm.defaultValue
         });
     } catch (err) {
       if (err.response) {
