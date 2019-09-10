@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../config/config";
 
 const getDomainName = () => {
   const userInfoStr = localStorage.getItem("userInfo");

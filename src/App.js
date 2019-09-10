@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import SubDomainForm from "./components/subDomineForm";
 import StartUp from "./components/StartUp";
-import config from "./config";
+import config from "./config/config";
 import localStorageClients from "./services/localStorageClients";
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
     loc_userInfo
       ? setUserInfo(mod_userInfo)
       : localStorageClients.setLocalUserInfo(userInfo);
-    console.log(mod_userInfo);
+
     return () => {};
   }, []);
   return (

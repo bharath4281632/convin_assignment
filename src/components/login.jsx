@@ -1,23 +1,12 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import localStorageClients from "../services/localStorageClients";
-import httpClients from "../services/httpClients";
+import CustomForm from "./common/customForm";
 
-import config from "../config";
-//Material Ui component
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import httpClients from "../services/httpClients";
+import localStorageClients from "../services/localStorageClients";
+
+import config from "../config/config";
 
 //Material-ui custom design
-const style = theme => ({
-  root: {},
-  paper: {
-    padding: 25
-  }
-});
 
 export class Login extends Component {
   state = {
@@ -35,9 +24,8 @@ export class Login extends Component {
   };
 
   handleSubmit = async e => {
-    e.preventDefault();
-
     try {
+      e.preventDefault();
       const response = await httpClients.postHttp(
         "/persons/get_token/",
         this.state.userLogin,
@@ -54,42 +42,22 @@ export class Login extends Component {
     }
   };
   render() {
-    const { classes } = this.props;
     const { userLogin, error } = this.state;
     const { fields } = config.loginForm;
     return (
-      <div className={classes.root}>
-        <div className={classes.paper}>
-          <form onSubmit={this.handleSubmit}>
-            <FormControl fullWidth>
-              {fields.map(field => (
-                <FormGroup key={field.name}>
-                  <TextField
-                    label={field.label}
-                    value={userLogin[field.name]}
-                    onChange={this.handleChange}
-                    type={field.type}
-                    margin="normal"
-                    fullWidth
-                    name={field.name}
-                    required={field.required}
-                    error={error[field.name] ? true : false}
-                  ></TextField>
-                  <FormHelperText error={error[field.name] ? true : false}>
-                    {error[field.name]}
-                  </FormHelperText>
-                </FormGroup>
-              ))}
-
-              <Button variant="contained" color="primary" type="submit">
-                Log In
-              </Button>
-            </FormControl>
-          </form>
-        </div>
+      <div style={{ padding: 25 }}>
+        Base Url: {httpClients.baseUrl()}
+        <CustomForm
+          fields={fields}
+          fieldState={userLogin}
+          error={error}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          submitContent={"Login Now"}
+        ></CustomForm>
       </div>
     );
   }
 }
 
-export default withStyles(style)(Login);
+export default Login;

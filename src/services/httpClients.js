@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../config";
+import config from "../config/config";
 import localStorageClients from "./localStorageClients";
 
 const { defaultConfig } = config.restApi;
@@ -9,7 +9,7 @@ const baseUrl = () => {
 };
 
 function getHttp(url, subDomain = "app") {
-  return axios.get(`${baseUrl()}${url}`);
+  return axios.get(`${baseUrl()}${url}`, defaultConfig);
 }
 function postHttp(url, data, subDomain = "app") {
   return axios.post(`${baseUrl()}${url}`, data, {
