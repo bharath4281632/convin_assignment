@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { FormControl, FormGroup } from "@material-ui/core";
+import localStorageClients from "../services/localStorageClients";
+import httpClients from "../services/httpClients";
 
 import config from "../config";
-import httpClients from "../services/httpClients";
-import localStorageClients from "../services/localStorageClients";
+//Material Ui component
+import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
 //Material-ui custom design
 const style = theme => ({
   root: {},
@@ -20,7 +24,8 @@ export class Login extends Component {
     userLogin: {
       username: "",
       password: ""
-    }
+    },
+    error: {}
   };
   handleChange = e => {
     const { value, name } = e.currentTarget;
@@ -31,7 +36,6 @@ export class Login extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    console.log(this.state.userLogin);
 
     try {
       const response = await httpClients.postHttp(
@@ -44,12 +48,14 @@ export class Login extends Component {
         window.location.href = "/home";
       }
     } catch (err) {
-      console.log(err.message);
+      err.response
+        ? this.setState({ error: err.response.data })
+        : console.error(err.message);
     }
   };
   render() {
     const { classes } = this.props;
-    const { userLogin } = this.state;
+    const { userLogin, error } = this.state;
     const { fields } = config.loginForm;
     return (
       <div className={classes.root}>
@@ -57,7 +63,7 @@ export class Login extends Component {
           <form onSubmit={this.handleSubmit}>
             <FormControl fullWidth>
               {fields.map(field => (
-                <FormGroup key={field.name} style={{ width: "100%" }}>
+                <FormGroup key={field.name}>
                   <TextField
                     label={field.label}
                     value={userLogin[field.name]}
@@ -67,7 +73,11 @@ export class Login extends Component {
                     fullWidth
                     name={field.name}
                     required={field.required}
+                    error={error[field.name] ? true : false}
                   ></TextField>
+                  <FormHelperText error={error[field.name] ? true : false}>
+                    {error[field.name]}
+                  </FormHelperText>
                 </FormGroup>
               ))}
 
