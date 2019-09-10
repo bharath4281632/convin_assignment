@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { withStyles } from "@material-ui/core/styles";
+import SubDominePopUp from "./uiComponents/subDominePopUp";
 
 //Material-ui custom design
 const style = theme => ({
@@ -90,7 +91,13 @@ class SubDomainForm extends Component {
     const { subDomain, error } = this.state;
     return (
       <div className={classes.root}>
-        <Paper className={classes.paper}>
+        <SubDominePopUp
+          error={error}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          subDomain={subDomain}
+        ></SubDominePopUp>
+        {/* <Paper className={classes.paper}>
           <form onSubmit={this.handleSubmit}>
             <FormLabel className={classes.formLabel}>
               Create A Custom Sub-Domine
@@ -118,7 +125,7 @@ class SubDomainForm extends Component {
               Create a SubDomain
             </Button>
           </form>
-        </Paper>
+        </Paper> */}
       </div>
     );
   }

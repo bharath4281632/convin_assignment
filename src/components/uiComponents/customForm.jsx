@@ -6,15 +6,14 @@ import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-function CustomForm(props) {
-  const {
-    fields,
-    fieldState,
-    error,
-    handleChange,
-    handleSubmit,
-    submitContent
-  } = props;
+function CustomForm({
+  fields,
+  fieldState,
+  error,
+  handleChange,
+  handleSubmit,
+  submitContent
+}) {
   return (
     <form onSubmit={handleSubmit}>
       <FormControl fullWidth>

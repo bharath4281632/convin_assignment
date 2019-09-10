@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CustomForm from "./common/customForm";
+import CustomForm from "./uiComponents/customForm";
 
 import httpClients from "../services/httpClients";
 
