@@ -2,6 +2,7 @@ import * as jwt_decoder from "jwt-decode";
 
 export function logOutUser() {
   localStorage.removeItem("token");
+  window.location.href = "/";
 }
 export function Unix_timestamp(t) {
   var dt = new Date(t * 1000);

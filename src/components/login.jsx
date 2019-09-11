@@ -13,9 +13,6 @@ export class Login extends Component {
     userLogin: config.loginForm.defaultValue,
     error: {}
   };
-  // componentDidMount(){
-  // this.set
-  // }
   handleChange = e => {
     const { value, name } = e.currentTarget;
     let userLogin = { ...this.state.userLogin };

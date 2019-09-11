@@ -1,45 +1,7 @@
 import React, { Component } from "react";
 import httpClients from "../services/httpClients";
 
-//material design Ui components
-import Paper from "@material-ui/core/Paper";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import FormHelperText from "@material-ui/core/FormHelperText";
-
-import { withStyles } from "@material-ui/core/styles";
 import SubDominePopUp from "./uiComponents/subDominePopUp";
-
-//Material-ui custom design
-const style = theme => ({
-  root: {
-    position: "absolute",
-    width: 620,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%,-50%)"
-  },
-  paper: {
-    padding: 25
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  },
-  button: {
-    float: "right",
-    "&::after": {
-      content: "gg",
-      background: "black",
-      clear: "both"
-    }
-  },
-  formLabel: {
-    color: "black"
-  }
-});
 
 class SubDomainForm extends Component {
   state = {
@@ -57,6 +19,7 @@ class SubDomainForm extends Component {
     const { value } = e.currentTarget;
     this.setState({ subDomain: value });
   };
+
   handleSubmit = async e => {
     e.preventDefault();
     const { subDomain } = this.state;
@@ -86,48 +49,26 @@ class SubDomainForm extends Component {
       console.log(err.response.data.message);
     }
   };
+
   render() {
-    const { classes } = this.props;
+    const rootStyle = {
+      position: "absolute",
+      width: 620,
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%,-50%)"
+    };
     const { subDomain, error } = this.state;
     return (
-      <div className={classes.root}>
+      <div style={rootStyle}>
         <SubDominePopUp
           error={error}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           subDomain={subDomain}
         ></SubDominePopUp>
-        {/* <Paper className={classes.paper}>
-          <form onSubmit={this.handleSubmit}>
-            <FormLabel className={classes.formLabel}>
-              Create A Custom Sub-Domine
-            </FormLabel>
-            <FormGroup className={classes.textField}>
-              <TextField
-                error={error ? true : false}
-                label="Enter Your Sub-Domine"
-                value={subDomain}
-                onChange={this.handleChange}
-                margin="normal"
-                fullWidth
-                name="subDomain"
-              />
-              <FormHelperText error={error ? true : false}>
-                {error}
-              </FormHelperText>
-            </FormGroup>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Create a SubDomain
-            </Button>
-          </form>
-        </Paper> */}
       </div>
     );
   }
 }
-export default withStyles(style)(SubDomainForm);
+export default SubDomainForm;
